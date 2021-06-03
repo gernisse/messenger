@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app-messenger:
+    image: gernisse/messenger:0.0.1
+    container_name: app-messenger
+    ports:
+      - 8090:8090
+    depends_on:
+      - db-messenger
+    environment:
+      DATASOURCE_HOST: dbmessenger
+  dbmessenger:
+    image: postgres:13
+    container_name: db-messenger
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: messenger

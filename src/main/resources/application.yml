@@ -1,0 +1,29 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /messenger
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: messenger
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DATASOURCE_HOST}:5432/messenger
+    username: admin
+    password: admin
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-test-query: SELECT 1;
+      idle-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    show-sql: true
+    open-in-view: false
+    properties:
+      javax.persistence.validation.mode: none
+  profiles:
+    active: SWAGGER

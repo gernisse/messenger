@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--CONSOLE-->
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <!--TCP-->
+    <!--    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+    <!--        <destination>${LOGSTASH_HOST:-logstash}:${LOGSTASH_PORT:-5000}</destination>-->
+    <!--        &lt;!&ndash;CHANGE THIS ACCORDING TO ENVIRONMENT&ndash;&gt;-->
+    <!--        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">-->
+    <!--            <providers>-->
+    <!--                <mdc/>-->
+    <!--                &lt;!&ndash; MDC variables on the Thread will be written as JSON fields&ndash;&gt;-->
+    <!--                <context/>-->
+    <!--                &lt;!&ndash;Outputs entries from logback's context &ndash;&gt;-->
+    <!--                &lt;!&ndash;<version/> &lt;!&ndash; Logstash json format version, the @version field in the output&ndash;&gt;&ndash;&gt;-->
+    <!--                <logLevel/>-->
+    <!--                <loggerName/>-->
+    <!--                <pattern>-->
+    <!--                    <pattern> &lt;!&ndash;we can add some custom fields to be sent with all the log entries.  &ndash;&gt;-->
+    <!--                        {      &lt;!&ndash;make filtering easier in Logstash&ndash;&gt;-->
+    <!--                        "appName": "messenger",&lt;!&ndash;or searching with Kibana&ndash;&gt;-->
+    <!--                        "appVersion": "0.1",&lt;!&ndash;or searching with Kibana&ndash;&gt;-->
+    <!--                        "java-version": "${java.version}",-->
+    <!--                        "hostname": "${HOSTNAME}"-->
+    <!--                        }-->
+    <!--                    </pattern>-->
+    <!--                </pattern>-->
+    <!--                <threadName/>-->
+    <!--                <message/>-->
+    <!--                <logstashMarkers/>-->
+    <!--                &lt;!&ndash; Useful so we can add extra information for specific log lines as Markers&ndash;&gt;-->
+    <!--                <arguments/>-->
+    <!--                &lt;!&ndash;or through StructuredArguments&ndash;&gt;-->
+    <!--                <stackTrace/>-->
+    <!--            </providers>-->
+    <!--        </encoder>-->
+    <!--    </appender>-->
+
+    <!--ROLLING FILE-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/messenger.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/messenger.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <!-- daily rollover -->
+            <maxHistory>30</maxHistory>
+            <!-- keep 30 days' worth of history -->
+        </rollingPolicy>
+        <encoder>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} [%thread] -&#45;&#45; %logger{36} - %msg%n</pattern>-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <!--        <appender-ref ref="LOGSTASH"/>-->
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
